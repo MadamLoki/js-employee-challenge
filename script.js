@@ -1,31 +1,27 @@
 // Get a reference to the #add-employees-btn element
 const addEmployeesBtn = document.querySelector('#add-employees-btn');
 
-// Collect employee data
-const collectEmployees = function() {
+// Collect employee information
+function collectEmployees() {
     const employees = [];
     while (true) {
-        // Get user input for employee data
         const firstName = prompt('Enter the employee\'s first name:');
         const lastName = prompt('Enter the employee\'s last name:');
         let salary = prompt('Enter the employee\'s salary:');
-
-        // Convert salary to a number or set it to 0 if it's not a number
-        salary = isNaN(salary) ? 0 : Number(salary);
+        salary = parseFloat(salary); // Use parseFloat instead of Number
+        
+        if (isNaN(salary)) {
+            salary = 0;
+        }
 
         // Create new employee object
-        const employee = {
-            firstName: firstName,
-            lastName: lastName,
-            salary: salary
-        };
+        const employee = { firstName, lastName, salary };
 
         // Add employee to the array 
         employees.push(employee);
 
         // Ask if wants to add another employee
-        const addAnother = confirm('Would you like to add another employee?');
-        if (!addAnother) {
+        if (!confirm('Would you like to add another employee?')) {
             break; // Exit the loop
         }
     }
@@ -33,18 +29,40 @@ const collectEmployees = function() {
 }
 
 // Display the average salary
-const displayAverageSalary = function(employeesArray) {
-    const totalSalary = employeesArray.reduce((acc, employee) => acc + employee.salary, 0);
-    const averageSalary = totalSalary / employeesArray.length;
-    console.log(`The average employee salary between our ${employeesArray.length} employee(s) is ${averageSalary}.`);
+function displayAverageSalary(employees) {
+    if (employees.length === 0) {
+        console.log("No employees to calculate average salary.");
+        return;
+    }
+
+    const totalSalary = employees.reduce((sum, emp) => sum + emp.salary, 0);
+    const averageSalary = totalSalary / employees.length;
+
+    // Ensure the average is always displayed with exactly two decimal places
+    const averageSalaryFormatted = averageSalary.toFixed(2);
+
+    console.log(`The average employee salary between our ${employees.length} employee(s) is $${averageSalaryFormatted}`);
 }
 
 // Select a random employee
-const getRandomEmployee = function(employeesArray) {
+function getRandomEmployee(employeesArray) {
+    if (employeesArray.length === 0) {
+        console.log("No employees for the drawing.");
+        return;
+    }
+
     const randomIndex = Math.floor(Math.random() * employeesArray.length);
     const randomEmployee = employeesArray[randomIndex];
     console.log(`Congratulations to ${randomEmployee.firstName} ${randomEmployee.lastName}, our random drawing winner!`);
 }
+
+// Main function to run the program
+function main() {
+    const employees = collectEmployees();
+    displayAverageSalary(employees);
+    getRandomEmployee(employees);
+}
+
 
 /*
 ====================
